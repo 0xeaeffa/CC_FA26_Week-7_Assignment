@@ -13,12 +13,10 @@ async function setup() {
   createCanvas(width, height);
   background(colors.winterColor);
 
-  var grad = drawingContext.createRadialGradient(0, height/2, 0, 0, height/2, width/2);
+  var grad = drawingContext.createRadialGradient(-width/3, height/2, 0, 0, height/2, width/2);
   grad.addColorStop(0, colors.springColor);
   grad.addColorStop(1, 'rgba(255,255,255,0)');
   drawingContext.fillStyle = grad;
-  // scale(0.8,1)
-  // noStroke();
   rect(0,0,width, height);
   
   resetMatrix();
