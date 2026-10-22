@@ -11,23 +11,91 @@ async function setup() {
   // console.log(`width: ${width}, height: ${height}`);
 
   createCanvas(width, height);
+  angleMode(DEGREES);
   background(colors.winterColor);
 
-  var grad = drawingContext.createRadialGradient(-width/3, height/2, 0, 0, height/2, width/2);
+  var grad = drawingContext.createRadialGradient(
+    -width / 2,
+    height / 2,
+    0,
+    0,
+    height / 2,
+    width / 2,
+  );
   grad.addColorStop(0, colors.springColor);
   grad.addColorStop(1, 'rgba(255,255,255,0)');
   drawingContext.fillStyle = grad;
-  rect(0,0,width, height);
-  
-  resetMatrix();
-  translate(width / 2, height / 2);
+  // translate(-(width/8), 0);
   noStroke();
-  fill('red');
-  ellipse(0,0,5);
-  fill('black');
+  rect(0, 0, width, height);
 
-  //bezier(x1, y1, x2, y2, x3, y3, x4, y4)
-  bezier(0, 0, 5, 10, 10, 15, 0, 50);
+  resetMatrix();
+  strokeCap(ROUND);
+  translate(width / 4, height / 2);
+  for (let i = 0; i < 6; i++) {
+    push();
+    rotate(i * (360 / 6));
+    stroke('#222');
+
+    strokeWeight(3);
+    line(0, 0, 0, 16);
+    line(0, 16, 10, 20);
+    line(0, 16, -10, 20);
+
+    strokeWeight(2.5);
+    line(0, 16, 0, 22);
+    line(0, 22, 9, 25);
+    line(0, 22, -9, 25);
+
+    strokeWeight(2);
+    line(0, 22, 0, 27);
+    line(0, 27, 7, 29);
+    line(0, 27, -7, 29);
+
+    strokeWeight(1);
+    line(0, 27, 0, 31);
+    line(0, 31, 6, 33);
+    line(0, 31, -6, 33);
+
+    line(0, 31, 0, 36);
+    pop();
+  }
+
+  resetMatrix();
+  strokeCap(ROUND);
+  translate(width / 2, height / 2);
+  stroke('#222');
+  strokeWeight(2);
+  for (let i = 0; i < 6; i++) {
+    push();
+    rotate(i * (360 / 6));
+    let stem = 12;
+    line(0, 0, 0, stem);
+
+    let angle = 45;
+    let length = stem;
+    let step = 6;
+    let branch = 12;
+    for (let j = 0; j < 3; j++) {
+      stroke(80 + j * 60);
+      line(0, length, 0, length + step);
+      push();
+      translate(0, length);
+      rotate(angle);
+      line(0, 0, 0, branch);
+      pop();
+      push();
+      translate(0, length);
+      rotate(-angle);
+      line(0, 0, 0, branch);
+      pop();
+
+      branch -= 3;
+      length += step;
+    }
+    line(0, length, 0, length + 6);
+    pop();
+  }
 }
 
 function draw() {}
