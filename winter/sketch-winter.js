@@ -4,6 +4,73 @@ const windowPadding = 1.6; // rem
 let colors;
 let width, height;
 
+let flak;
+
+class Snowflake {
+  figAmount;
+  branchAmount;
+  shade;
+  weight;
+  root;
+  step;
+  branch;
+  angle;
+  constructor(
+    angle, // 40-58 or something
+    figAmount = 6,
+    branchAmount = 3,
+    shade = 60,
+    weight = 3,
+    root = 12,
+    step = 6, // prob 4-8
+    branch = 12,
+  ) {
+    this.figAmount = figAmount;
+    this.branchAmount = branchAmount;
+    this.shade = shade;
+    this.weight = weight;
+    this.root = root;
+    this.step = step;
+    this.branch = branch;
+    this.angle = angle;
+  }
+
+  show() {
+    strokeCap(ROUND);
+    stroke(this.shade);
+    strokeWeight(this.weight);
+    for (let i = 0; i < this.figAmount; i++) {
+      push();
+      rotate(i * (360 / this.figAmount));
+      line(0, 0, 0, this.root);
+
+      let stem = this.root;
+      let bLength = this.branch;
+      for (let j = 1; j <= this.branchAmount; j++) {
+        stroke(this.shade + j * 48);
+        line(0, stem, 0, stem + this.step);
+
+        push();
+        translate(0, stem);
+        rotate(this.angle);
+        line(0, 0, 0, bLength);
+        pop();
+
+        push();
+        translate(0, stem);
+        rotate(this.angle * -1);
+        line(0, 0, 0, bLength);
+        pop();
+
+        bLength -= 3;
+        stem += this.step;
+      }
+      line(0, stem, 0, stem + this.root / 2);
+      pop();
+    }
+  }
+}
+
 async function setup() {
   colors = await loadJSON('../utils/colors.json');
   width = windowWidth - rem * windowPadding * 2;
@@ -30,72 +97,10 @@ async function setup() {
   rect(0, 0, width, height);
 
   resetMatrix();
-  strokeCap(ROUND);
-  translate(width / 4, height / 2);
-  for (let i = 0; i < 6; i++) {
-    push();
-    rotate(i * (360 / 6));
-    stroke('#222');
-
-    strokeWeight(3);
-    line(0, 0, 0, 16);
-    line(0, 16, 10, 20);
-    line(0, 16, -10, 20);
-
-    strokeWeight(2.5);
-    line(0, 16, 0, 22);
-    line(0, 22, 9, 25);
-    line(0, 22, -9, 25);
-
-    strokeWeight(2);
-    line(0, 22, 0, 27);
-    line(0, 27, 7, 29);
-    line(0, 27, -7, 29);
-
-    strokeWeight(1);
-    line(0, 27, 0, 31);
-    line(0, 31, 6, 33);
-    line(0, 31, -6, 33);
-
-    line(0, 31, 0, 36);
-    pop();
-  }
-
-  resetMatrix();
-  strokeCap(ROUND);
   translate(width / 2, height / 2);
-  stroke('#222');
-  strokeWeight(2);
-  for (let i = 0; i < 6; i++) {
-    push();
-    rotate(i * (360 / 6));
-    let stem = 12;
-    line(0, 0, 0, stem);
 
-    let angle = 45;
-    let length = stem;
-    let step = 6;
-    let branch = 12;
-    for (let j = 0; j < 3; j++) {
-      stroke(80 + j * 60);
-      line(0, length, 0, length + step);
-      push();
-      translate(0, length);
-      rotate(angle);
-      line(0, 0, 0, branch);
-      pop();
-      push();
-      translate(0, length);
-      rotate(-angle);
-      line(0, 0, 0, branch);
-      pop();
-
-      branch -= 3;
-      length += step;
-    }
-    line(0, length, 0, length + 6);
-    pop();
-  }
+  flak = new Snowflake(58);
+  flak.show();
 }
 
 function draw() {}
