@@ -114,6 +114,9 @@ class leaf {
     this.alpha = 255;
     this.fading = false; // true when leaves touch ground pile to trigger fading
 
+    // maple leaf chance
+    this.isMaple = random() < 0.4;
+
     // leaf movement
     this.swayCenter = x; // x spawn coord of leave is the center line it sways around
     // falling speed
@@ -155,26 +158,45 @@ class leaf {
     // create shape of leave
     noStroke();
     fill(red(c), green(c), blue(c), this.alpha);
-    beginShape();
-    // draw the two arcs of a leave, tracing down the right side then back up the left
-    // right half first
-    for(let i = 0; i < 10; i ++){
-      const div = i / 10; // divide right arc of the leaf into ten parts
-      vertex(s * 0.3 * sin(PI*div), -s/2 + s*div); // x -> how far from the middle, y -> top to bottom leave be -s/2 and s/2
+
+    // draw maple (10 points around a circle, consists of tip and notch)
+    if(this.isMaple){
+      beginShape();
+      for (let i = 0; i < 14; i ++) {
+        // angle of this point
+        const angle = -HALF_PI + i * TWO_PI/14;
+        const bottomTip = (1 - sin(angle)) / 2; // smaller tips near the bottom
+        const r = i % 2 === 0 ? s * (0.3 + 0.22*bottomTip) : s * 0.2; // make even points a tip and odd poitns notch
+        vertex(r * cos(angle), r * sin(angle));
+      }
+      endShape(CLOSE);
+
+      // draw maple stem
+      stroke(red(c) * 0.6, green(c) * 0.6, blue(c) * 0.6, this.alpha);
+      strokeWeight(max(1, s * 0.04));
+      line(0, 0, 0, s * 0.6);
     }
-    // left half
-    for(let i = 10; i >= 0; i --){
-      const div = i / 10; // divide left arc of the leaf into ten parts
-      vertex(-s * 0.3 * sin(PI*div), -s/2 + s*div); // the other way round
+    else{
+      beginShape();
+      // draw the two arcs of a leave, tracing down the right side then back up the left
+      // right half first
+      for(let i = 0; i < 10; i ++){
+        const div = i / 10; // divide right arc of the leaf into ten parts
+        vertex(s * 0.3 * sin(PI*div), -s/2 + s*div); // x -> how far from the middle, y -> top to bottom leave be -s/2 and s/2
+      }
+      // left half
+      for(let i = 10; i >= 0; i --){
+        const div = i / 10; // divide left arc of the leaf into ten parts
+        vertex(-s * 0.3 * sin(PI*div), -s/2 + s*div); // the other way round
+      }
+
+      endShape(CLOSE);
+
+      // draw vein and stem, darker color
+      stroke(red(c)*0.6, green(c)*0.6, blue(c)*0.6, this.alpha);
+      strokeWeight(max(1, s *0.04));
+      line(0, -s*0.45, 0, s*0.62);
     }
-
-    endShape(CLOSE);
-
-    // draw vein and stem, darker color
-    stroke(red(c)*0.6, green(c)*0.6, blue(c)*0.6, this.alpha);
-    strokeWeight(max(1, s *0.04));
-    line(0, -s*0.45, 0, s*0.62);
-
     pop();
   }
 }
