@@ -1,6 +1,10 @@
 {
-    "springColor": "rgba(255,0,0,1)",
-    "summerColor": "rgba(0,255,0,1)",
-    "fallColor": "",
-    "winterColor": "rgba(234, 239, 250, 1)"
+  "springColor": "#d8efc8",
+  "summerColor": "rgba(0,255,0,1)",
+  "summerGradient": {
+    "top": "#101A2C",
+    "bottom": "#F5C65D"
+  },
+  "fallColor": "#D9773A",
+  "winterColor": "rgba(234, 239, 250, 1)"
 }
