@@ -2,13 +2,20 @@ const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 const windowPadding = 1.6; // rem
 
 const snowflakes = [];
-const snowAmount = 4;
+const snowAmount = 48;
 const snowColors = [
-  // [148, 175, 235],
-  [60, 60, 60],
-  [40, 40, 40],
-  [20, 20, 20],
-  [0, 0, 0],
+  // [207,225,237],
+  // [228,238,245],
+  // [103,152,180],
+  // [67,106,132],
+  // [119,160,180],
+  // [199,220,235],
+  [122,145,176],
+  [157,176,199],
+  [174,189,217],
+  [196,209,230],
+  [203,215,234],
+  [186,200,224],
 ];
 
 let colors;
@@ -174,36 +181,41 @@ async function setup() {
 
   createCanvas(width, height);
   angleMode(DEGREES);
-  frameRate(12);
+  frameRate(30);
   background(colors.winterColor);
   drawGradient();
 
   for (let i = 0; i < snowAmount; i++) {
-    let angle = random(44, 58);
-    let posX = random(width - 10, width + 10);
-    let pos = createVector(posX, -100);
-    let scale = random(0.5, 1);
-    let figAmount = round(random(5, 7));
+    let angle = random(48, 58);
+    let posX = random(width / 2, width);
+    let pos = createVector(posX, -1 * (height / 8));
+    let scale = random(0.3, 0.6);
+
+    let figPercent = random(0, 4);
+    let figAmount = 6;
+    if (figPercent > 3) {
+      figAmount = 7;
+    }
 
     let weight;
-    if (scale < 0.6) {
-      weight = 2;
-    } else {
+    if (scale < 0.45) {
       weight = 3;
+    } else {
+      weight = 4;
     }
 
     let root = round(random(12, 14));
     let branch = root;
-    let step = random(5, 7);
+    let step = root / 2;
     let branchAmount = ceil(root / 4);
 
     let rotateSpeed = scale * 2;
     let flipSpeed = random(0.5, 1.5) * (scale * 2);
-    let fallSpeed = random(0.8, 1.2) * (scale * 2);
+    let fallSpeed = random(0.8, 2) * (scale * 2);
     let wave = random(1, 3);
-    let wind = random(-1, -3);
+    let wind = random(0, -3);
 
-    let cIndex = round(random(0, 3));
+    let cIndex = floor(random(0, 5));
     let c = createVector(
       snowColors[cIndex][0],
       snowColors[cIndex][1],
@@ -231,21 +243,24 @@ async function setup() {
     );
   }
 
-  translate(0, height / 2);
-  for (let i = 0; i < snowAmount; i++) {
-    let s = snowflakes[i];
-    // s.update(frameCount);
-
-    push();
-    translate(80 * (i + 1), 0);
-    s.render();
-    pop();
-  }
+  // translate(0, height / 2);
+  // for (let i = 0; i < snowAmount; i++) {
+  //   let s = snowflakes[i];
+  //   push();
+  //   translate(80 * (i + 1), 0);
+  //   s.render();
+  //   pop();
+  // }
 }
 
 function draw() {
-  // background(colors.winterColor);
-  // drawGradient();
+  background(colors.winterColor);
+  drawGradient();
+
+  for (let i = 0; i < snowAmount; i++) {
+    let s = snowflakes[i];
+    s.update(frameCount);
+  }
 }
 
 function windowResized() {
@@ -253,6 +268,9 @@ function windowResized() {
   height = width / 2;
   resizeCanvas(width, height);
 
-  let pos = createVector(width, -100);
-  flak.updateStartPos(pos);
+  for (let i = 0; i < snowflakes.length; i++) {
+    let posX = random(width / 2, width);
+    let pos = createVector(posX, -1 * (height / 8));
+    snowflakes[i].updateStartPos(pos);
+  }
 }
