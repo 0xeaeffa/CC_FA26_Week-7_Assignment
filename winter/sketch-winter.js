@@ -1,15 +1,18 @@
 const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 const windowPadding = 1.6; // rem
+
+const snowflakes = [];
+const snowAmount = 4;
 const snowColors = [
-  [148, 175, 235],
-  [0, 255, 0],
-  [0, 0, 255],
+  // [148, 175, 235],
+  [60, 60, 60],
+  [40, 40, 40],
+  [20, 20, 20],
+  [0, 0, 0],
 ];
 
 let colors;
 let width, height;
-
-let flak;
 
 class Snowflake {
   scale;
@@ -89,7 +92,8 @@ class Snowflake {
       let stem = this.root;
       let bLength = this.branch;
       for (let j = 1; j <= this.branchAmount; j++) {
-        let c = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z}, ${0.8 - j * 0.22})`;
+        let opacity = 0.8 - j * (0.7 / this.branchAmount);
+        let c = `rgba(${this.color.x}, ${this.color.y}, ${this.color.z}, ${opacity})`;
         stroke(c);
         line(0, stem, 0, stem + this.step);
 
@@ -105,9 +109,10 @@ class Snowflake {
         line(0, 0, 0, bLength);
         pop();
 
-        bLength -= 3;
+        bLength -= this.branch / 4;
         stem += this.step;
       }
+      console.log(`sclae: ${this.scale}, ${this.branchAmount}`);
       line(0, stem, 0, stem + this.root / 2);
       pop();
     }
@@ -169,20 +174,78 @@ async function setup() {
 
   createCanvas(width, height);
   angleMode(DEGREES);
-  frameRate(30);
+  frameRate(12);
   background(colors.winterColor);
   drawGradient();
 
-  let pos = createVector(width, -100);
-  flak = new Snowflake(58, pos);
-  // flak.render();
+  for (let i = 0; i < snowAmount; i++) {
+    let angle = random(44, 58);
+    let posX = random(width - 10, width + 10);
+    let pos = createVector(posX, -100);
+    let scale = random(0.5, 1);
+    let figAmount = round(random(5, 7));
+
+    let weight;
+    if (scale < 0.6) {
+      weight = 2;
+    } else {
+      weight = 3;
+    }
+
+    let root = round(random(12, 14));
+    let branch = root;
+    let step = random(5, 7);
+    let branchAmount = ceil(root / 4);
+
+    let rotateSpeed = scale * 2;
+    let flipSpeed = random(0.5, 1.5) * (scale * 2);
+    let fallSpeed = random(0.8, 1.2) * (scale * 2);
+    let wave = random(1, 3);
+    let wind = random(-1, -3);
+
+    let cIndex = round(random(0, 3));
+    let c = createVector(
+      snowColors[cIndex][0],
+      snowColors[cIndex][1],
+      snowColors[cIndex][2],
+    );
+
+    snowflakes.push(
+      new Snowflake(
+        angle,
+        pos,
+        scale,
+        figAmount,
+        branchAmount,
+        weight,
+        root,
+        step,
+        branch,
+        rotateSpeed,
+        flipSpeed,
+        fallSpeed,
+        wave,
+        wind,
+        c,
+      ),
+    );
+  }
+
+  translate(0, height / 2);
+  for (let i = 0; i < snowAmount; i++) {
+    let s = snowflakes[i];
+    // s.update(frameCount);
+
+    push();
+    translate(80 * (i + 1), 0);
+    s.render();
+    pop();
+  }
 }
 
 function draw() {
-  background(colors.winterColor);
-  drawGradient();
-
-  flak.update(frameCount);
+  // background(colors.winterColor);
+  // drawGradient();
 }
 
 function windowResized() {

@@ -2,5 +2,5 @@
     "springColor": "rgba(255,0,0,1)",
     "summerColor": "rgba(0,255,0,1)",
     "fallColor": "",
-    "winterColor": "rgba(234, 239, 250, 0.6)"
+    "winterColor": "rgba(234, 239, 250, 1)"
 }
