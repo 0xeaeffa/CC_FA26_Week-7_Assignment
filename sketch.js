@@ -8,7 +8,11 @@ let surface3, surface4;
 let winterBuf;
 let qmWinter1, qmWinter2;
 let sfWinter1, sfWinter2;
+
 let fallBuf, surface7, surface8;
+
+let summerBuf;
+let summerQuad1, summerQuad2;
 
 let colors;
 
@@ -27,11 +31,14 @@ async function setup() {
   springBuf = createGraphics(400, 800);
   surface3 = createGraphics(400, 400);
   surface4 = createGraphics(400, 400);
+  
 
   // // surface of summer
-  // summerBuf = createGraphics(400, 800);
-  // surface1 = createGraphics(400, 400);
-  // surface2 = createGraphics(400, 400);
+  summerBuf = createGraphics(400, 800);
+  surface1 = createGraphics(400, 400);
+  surface2 = createGraphics(400, 400);
+  summerQuad1 = pMapper.createQuadMap(400, 400, 20, 20);
+  summerQuad2 = pMapper.createQuadMap(400, 400, 20, 20);
 
   initSpring();
 
@@ -65,14 +72,11 @@ function draw() {
   quadMap1.displayTexture(surface3);
   quadMap2.displayTexture(surface4);
   renderSummer(summerBuf);
+  surface1.image(summerBuf, 0, 0, 400, 400, 0, 0, 400, 400);
+  surface2.image(summerBuf, 0, 0, 400, 400, 400, 0, 400, 400);
 
-
-surface1.image(summerBuf, 0, 0, 400, 400, 0, 0, 400, 400);
-
-surface2.image(summerBuf, 0, 0, 400, 400, 400, 0, 400, 400);
-
-summerQuad1.displayTexture(surface1);
-summerQuad2.displayTexture(surface2);
+  summerQuad1.displayTexture(surface1);
+  summerQuad2.displayTexture(surface2);
 
   renderFall(fallBuf);
 
