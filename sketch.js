@@ -1,5 +1,6 @@
 let pMapper;
 let quadMap1, quadMap2;
+let quadMapFall1, quadMapFall2;
 
 let springBuf;
 let surface3, surface4;
