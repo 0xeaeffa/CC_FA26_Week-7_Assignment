@@ -3,7 +3,7 @@ let colors;
 let grassColor;
 let particles = [];
 const NUM_PARTICLES = 100;
-const NUM_GRASS_BLADES = 400;
+const NUM_GRASS_BLADES = 600;
 let FLOWER_COLOR0;
 const FLOWER_DENSITY_INVERSE = 40;
 
@@ -174,7 +174,7 @@ function drawFloatingParticles() {
     if (p.x < 0) p.x = width;
     if (p.x > width) p.x = 0;
 
-    // 三层圆叠出发光效果
+    // 三层圆叠发光效果
     fill(255, 220, 120, 20);
     circle(p.x, p.y, p.size * 6);
 
@@ -207,7 +207,7 @@ function draw() {
 	drawSunflower(
 		width * 0.2,
 		height * 0.96,
-		0.9,
+		1.0,
 		sin(frameCount * 0.015) * 0.04
 	);
 
