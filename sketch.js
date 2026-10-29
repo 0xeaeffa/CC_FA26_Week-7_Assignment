@@ -7,6 +7,7 @@ let surface3, surface4;
 let winterBuf;
 let qmWinter1, qmWinter2;
 let sfWinter1, sfWinter2;
+let fallBuf, surface7, surface8;
 
 let colors;
 
@@ -33,6 +34,16 @@ async function setup() {
   sfWinter1 = createGraphics(400, 400);
   sfWinter2 = createGraphics(400, 400);
   initWinter(winterBuf, 800, 400);
+
+  // surface of fall
+  quadMapFall1 = pMapper.createQuadMap(400, 400, 20, 20);
+  quadMapFall2 = pMapper.createQuadMap(400, 400, 20, 20);
+
+  fallBuf = createGraphics(400, 800);
+  surface7 = createGraphics(400, 400);
+  surface8 = createGraphics(400, 400);
+
+  initFall();
 }
 
 function draw() {
@@ -51,6 +62,25 @@ function draw() {
   sfWinter2.image(winterBuf, 0, 0, 400, 400, 400, 0, 400, 400);
   qmWinter1.displayTexture(sfWinter1);
   qmWinter2.displayTexture(sfWinter2);
+
+  renderFall(fallBuf);
+
+  // top half of the fall buffer -> surface 7
+  surface7.image(
+    fallBuf,
+    0, 0, 400, 400,
+    0, 0, 400, 400
+  );
+
+  // bottom half of the fall buffer -> surface 8
+  surface8.image(
+    fallBuf,
+    0, 0, 400, 400,
+    0, 400, 400, 400
+  );
+
+  quadMapFall1.displayTexture(surface7);
+  quadMapFall2.displayTexture(surface8);
 }
 
 function keyPressed() {
