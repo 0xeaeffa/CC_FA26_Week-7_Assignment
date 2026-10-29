@@ -25,7 +25,11 @@ async function setup() {
 
   initSpring();
 
+
   // surface of fall
+  quadMapFall1 = pMapper.createQuadMap(400, 400, 20, 20);
+  quadMapFall2 = pMapper.createQuadMap(400, 400, 20, 20);
+
   fallBuf = createGraphics(400, 800);
   surface7 = createGraphics(400, 400);
   surface8 = createGraphics(400, 400);
@@ -70,8 +74,8 @@ function draw() {
     0, 400, 400, 400
   );
 
-  quadMap1.displayTexture(surface7);
-  quadMap2.displayTexture(surface8);
+  quadMapFall1.displayTexture(surface7);
+  quadMapFall2.displayTexture(surface8);
 }
 
 function keyPressed() {
