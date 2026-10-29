@@ -117,7 +117,7 @@ function draw() {
       emptyStart = frameCount;
     }
 
-    // 等待300帧后重新播放
+    // 等待480帧后重新播放
     if (frameCount - emptyStart >= 480) {
       restartAnimation();
     }
