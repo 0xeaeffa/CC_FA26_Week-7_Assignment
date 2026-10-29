@@ -1,6 +1,6 @@
 // same from winter to set margin
-const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-const windowPadding = 1.6; // rem
+// const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+// const windowPadding = 1.6; // rem
 
 // for mapping
 const fallW = 400; // buffer width
@@ -8,9 +8,9 @@ const fallH = 800; // buffer height
 
 let fallingLeaves = []; // falling leave array
 let groundLeaves = []; // ground leaves array
-let groundHeight = []; // height of eeach piles of array
+// let groundHeight = []; // height of eeach piles of array
 let gradient = []; // gradient colors
-let colors;
+// let colors;
 
 const maxFallingLeaf = 40; // most leaves in air
 const spawnChance = 0.08; // chances of leaf spawn each frame
