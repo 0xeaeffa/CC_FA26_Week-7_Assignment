@@ -4,6 +4,8 @@ let quadMap1, quadMap2;
 let springBuf;
 let surface3, surface4;
 
+let fallBuf, surface7, surface8;
+
 let colors;
 
 async function setup() {
@@ -22,6 +24,13 @@ async function setup() {
   surface4 = createGraphics(400, 400);
 
   initSpring();
+
+  // surface of fall
+  fallBuf = createGraphics(400, 800);
+  surface7 = createGraphics(400, 400);
+  surface8 = createGraphics(400, 400);
+
+  initFall();
 }
 
 function draw() {
@@ -43,6 +52,26 @@ function draw() {
 
   quadMap1.displayTexture(surface3);
   quadMap2.displayTexture(surface4);
+
+
+  renderFall(fallBuf);
+
+  // top half of the fall buffer -> surface 7
+  surface7.image(
+    fallBuf,
+    0, 0, 400, 400,
+    0, 0, 400, 400
+  );
+
+  // bottom half of the fall buffer -> surface 8
+  surface8.image(
+    fallBuf,
+    0, 0, 400, 400,
+    0, 400, 400, 400
+  );
+
+  quadMap1.displayTexture(surface7);
+  quadMap2.displayTexture(surface8);
 }
 
 function keyPressed() {
