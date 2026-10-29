@@ -2,7 +2,7 @@ const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 const windowPadding = 1.6; // rem
 
 const snowflakes = [];
-const snowAmount = 64;
+const snowAmount = 72;
 const snowColors = [
   [142, 165, 196],
   [157, 176, 199],
