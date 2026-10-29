@@ -2,17 +2,19 @@ const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 const windowPadding = 1.6; // rem
 
 const snowflakes = [];
-const snowAmount = 48;
+const snowAmount = 64;
 const snowColors = [
-  [122, 145, 176],
+  [142, 165, 196],
   [157, 176, 199],
-  [174, 189, 217],
-  [196, 209, 230],
-  [203, 215, 234],
-  [186, 200, 224],
+  [184, 199, 227],
+  [216, 229, 250],
+  [213, 225, 244],
+  [196, 210, 234],
 ];
 
 let colors;
+let groundHeight = [];
+
 let width, height;
 function getDimensions() {
   let width = window.innerWidth - rem * windowPadding * 2;
@@ -159,21 +161,51 @@ class Snowflake {
   }
 }
 
-function drawGradient() {
+function drawBackground(bgcolor) {
+  background(bgcolor);
   var grad = drawingContext.createRadialGradient(
-    -width / 2,
-    height / 2,
-    0,
-    0,
-    height / 2,
     width / 2,
+    height,
+    height / 8,
+
+    width / 2,
+    height,
+    width,
   );
-  grad.addColorStop(0, colors.springColor);
-  grad.addColorStop(1, 'rgba(234,239,250,0)');
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(1, 'rgba(242,246,255,0)');
   drawingContext.fillStyle = grad;
-  // translate(-(width/8), 0);
+
+  scale(2, 1);
+  translate(-width / 4, 0);
   noStroke();
   rect(0, 0, width, height);
+  resetMatrix();
+}
+function drawTerrain() {
+  const layers = 8;
+  for (let i = layers; i > 0; i--) {
+    push();
+    let heightScale = 1 - i * (0.8 / layers);
+    let heightOffset = height * 0.75 - i * (height / 256);
+    let strokeOp = heightScale * 0.2;
+    translate(0, heightOffset);
+    strokeWeight(4);
+    fill('rgba(255,255,255,0.2)');
+    stroke(`rgba(142, 165, 196,${strokeOp})`);
+
+    beginShape();
+    let x = 0;
+    for (let j = 0; j < groundHeight.length; j++) {
+      let y = heightScale * groundHeight[j];
+      vertex(x, y);
+      x += 4;
+    }
+    vertex(width, height);
+    vertex(0, height);
+    endShape(CLOSE);
+    pop();
+  }
   resetMatrix();
 }
 
@@ -181,16 +213,23 @@ async function setup() {
   colors = await loadJSON('../utils/colors.json');
   width = getDimensions().width;
   height = getDimensions().height;
-  // console.log(`width: ${width}, height: ${height}`);
+  console.log(`width: ${width}, height: ${height}`);
 
   createCanvas(width, height);
   angleMode(DEGREES);
   frameRate(30);
-  background(colors.winterColor);
-  drawGradient();
+  drawBackground(colors.winterColor);
+
+  let noiseLevel = 128;
+  let noiseScale = 0.006;
+  for (let i = 0; i <= width + 4; i += 4) {
+    let y = noiseLevel * noise(noiseScale * i);
+    groundHeight.push(y);
+  }
+  drawTerrain();
 
   for (let i = 0; i < snowAmount; i++) {
-    let angle = random(48, 58);
+    let angle = random(46, 58);
     let posX = random(width / 2, width);
     let pos = createVector(posX, -1 * (height / 8));
     let scale = random(0.3, 0.6);
@@ -208,7 +247,7 @@ async function setup() {
       weight = 4;
     }
 
-    let root = round(random(12, 14));
+    let root = round(random(12, 16));
     let branch = root;
     let step = root / 2;
     let branchAmount = ceil(root / 4);
@@ -255,12 +294,12 @@ async function setup() {
   //   s.render();
   //   pop();
   // }
+  // resetMatrix();
 }
 
 function draw() {
-  background(colors.winterColor);
-  drawGradient();
-
+  drawBackground(colors.winterColor);
+  drawTerrain();
   for (let i = 0; i < snowAmount; i++) {
     let s = snowflakes[i];
     s.update(frameCount);
