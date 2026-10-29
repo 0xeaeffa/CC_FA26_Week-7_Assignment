@@ -14,6 +14,7 @@ const snowColors = [
 
 let colors;
 let groundHeight = [];
+let grasses = [];
 
 let width, height;
 function getDimensions() {
@@ -161,15 +162,58 @@ class Snowflake {
   }
 }
 
+class Grass {
+  color;
+  angle;
+  len;
+  seg;
+  pos;
+  rot;
+  num;
+  constructor(color, pos, angle, length, seg, rot = 0) {
+    this.pos = pos;
+    this.angle = angle;
+    this.len = length;
+    this.seg = seg;
+    this.rot = rot;
+    this.num = floor(random(1, 4));
+    this.color = color;
+  }
+
+  render() {
+    push();
+    stroke(this.color);
+    translate(this.pos.x, this.pos.y);
+    rotate(180 + this.rot);
+
+    for (let k = 0; k < this.num; k++) {
+      push();
+      let length = this.len;
+      for (let i = 0; i < this.seg; i++) {
+        let weight = map(i, 0, this.seg, 3, 0.1);
+        strokeWeight(weight);
+        line(0, 0, 0, length);
+        translate(0, length);
+        rotate(this.angle);
+        length *= 0.8;
+      }
+      pop();
+      // rotate(random(6, 18));
+      rotate(this.rot); // i genuinely do not car anymore
+    }
+    pop();
+  }
+}
+
 function drawBackground(bgcolor) {
   background(bgcolor);
   var grad = drawingContext.createRadialGradient(
     width / 2,
-    height,
+    height * 0.8,
     height / 8,
 
     width / 2,
-    height,
+    height * 0.8,
     width,
   );
   grad.addColorStop(0, 'rgba(255,255,255,1)');
@@ -182,7 +226,7 @@ function drawBackground(bgcolor) {
   rect(0, 0, width, height);
   resetMatrix();
 }
-function drawTerrain() {
+function drawTerrain(init = false) {
   const layers = 8;
   for (let i = layers; i > 0; i--) {
     push();
@@ -198,6 +242,24 @@ function drawTerrain() {
     let x = 0;
     for (let j = 0; j < groundHeight.length; j++) {
       let y = heightScale * groundHeight[j];
+
+      if (init) {
+        let grassChance = random(0, 1);
+        let fallOff = groundHeight.length / 8;
+        if (j < fallOff && grassChance < map(j / fallOff, 0, 1, 0.2, 0.01)) {
+          const m = drawingContext.getTransform();
+          pd = pixelDensity();
+          let gPos = createVector(x, y + m.f / pd);
+
+          let gAngle = random(2, 12);
+          let gLen = map(j / fallOff, 0, 1, height / 8, 4);
+          let gSeg = floor(random(4, 7));
+          let gRot = random(-10, 10);
+          let gColor = `rgba(120, 215, 110,${strokeOp * 1.5})`;
+          grasses.push(new Grass(gColor, gPos, gAngle, gLen, gSeg, gRot));
+        }
+      }
+
       vertex(x, y);
       x += 4;
     }
@@ -207,18 +269,34 @@ function drawTerrain() {
     pop();
   }
   resetMatrix();
+
+  for (let i = 0; i < grasses.length; i++) {
+    grasses[i].render();
+  }
+}
+function drawGradient(color, cx, cy, radius) {
+  var grad = drawingContext.createRadialGradient(cx, cy, 0, cx, cy, radius);
+  grad.addColorStop(0, color);
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  drawingContext.fillStyle = grad;
+
+  noStroke();
+  rect(0, 0, width, height);
+  resetMatrix();
 }
 
 async function setup() {
   colors = await loadJSON('../utils/colors.json');
   width = getDimensions().width;
   height = getDimensions().height;
-  console.log(`width: ${width}, height: ${height}`);
+  // console.log(`width: ${width}, height: ${height}`);
 
   createCanvas(width, height);
   angleMode(DEGREES);
   frameRate(30);
   drawBackground(colors.winterColor);
+  drawGradient(colors.springColor, -width / 3, height * 0.75, width);
+  drawGradient(colors.fallColor, width * 1.75, height * 0.25, width);
 
   let noiseLevel = 128;
   let noiseScale = 0.006;
@@ -226,7 +304,7 @@ async function setup() {
     let y = noiseLevel * noise(noiseScale * i);
     groundHeight.push(y);
   }
-  drawTerrain();
+  drawTerrain(true);
 
   for (let i = 0; i < snowAmount; i++) {
     let angle = random(46, 58);
@@ -299,17 +377,22 @@ async function setup() {
 
 function draw() {
   drawBackground(colors.winterColor);
-  drawTerrain();
+  drawGradient(colors.springColor, -width / 3, height * 0.75, width);
+  drawGradient(colors.fallColor, width * 1.75, height * 0.25, width);
+  
   for (let i = 0; i < snowAmount; i++) {
     let s = snowflakes[i];
     s.update(frameCount);
   }
+  drawTerrain();
 }
 
 function windowResized() {
   width = getDimensions().width;
   height = getDimensions().height;
   resizeCanvas(width, height);
+
+  drawTerrain(true); // temp
 
   for (let i = 0; i < snowflakes.length; i++) {
     let posX = random(width / 2, width);
