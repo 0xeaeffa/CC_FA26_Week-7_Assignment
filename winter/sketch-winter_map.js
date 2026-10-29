@@ -216,7 +216,8 @@ function initTerrain(g, w, h) {
       if (j < fallOff && grassChance < map(j / fallOff, 0, 1, 0.2, 0.01)) {
         const m = g.drawingContext.getTransform();
         pd = g.pixelDensity();
-        let gPos = createVector(x, y + m.f / pd);
+        // let gPos = createVector(x, y + m.f / pd);
+        let gPos = createVector(x, y + heightOffset);
 
         let gAngle = random(2, 12);
         let gLen = map(j / fallOff, 0, 1, h / 8, 4);
