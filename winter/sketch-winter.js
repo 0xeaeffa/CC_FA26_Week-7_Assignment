@@ -4,22 +4,26 @@ const windowPadding = 1.6; // rem
 const snowflakes = [];
 const snowAmount = 48;
 const snowColors = [
-  // [207,225,237],
-  // [228,238,245],
-  // [103,152,180],
-  // [67,106,132],
-  // [119,160,180],
-  // [199,220,235],
-  [122,145,176],
-  [157,176,199],
-  [174,189,217],
-  [196,209,230],
-  [203,215,234],
-  [186,200,224],
+  [122, 145, 176],
+  [157, 176, 199],
+  [174, 189, 217],
+  [196, 209, 230],
+  [203, 215, 234],
+  [186, 200, 224],
 ];
 
 let colors;
 let width, height;
+function getDimensions() {
+  let width = window.innerWidth - rem * windowPadding * 2;
+  let height = width / 2;
+  if (height > window.innerHeight) {
+    height = window.innerHeight - rem * windowPadding * 2;
+    width = height * 2;
+    return { width: width, height: height };
+  }
+  return { width: width, height: height };
+}
 
 class Snowflake {
   scale;
@@ -119,7 +123,7 @@ class Snowflake {
         bLength -= this.branch / 4;
         stem += this.step;
       }
-      console.log(`sclae: ${this.scale}, ${this.branchAmount}`);
+      // console.log(`sclae: ${this.scale}, ${this.branchAmount}`);
       line(0, stem, 0, stem + this.root / 2);
       pop();
     }
@@ -175,8 +179,8 @@ function drawGradient() {
 
 async function setup() {
   colors = await loadJSON('../utils/colors.json');
-  width = windowWidth - rem * windowPadding * 2;
-  height = width / 2;
+  width = getDimensions().width;
+  height = getDimensions().height;
   // console.log(`width: ${width}, height: ${height}`);
 
   createCanvas(width, height);
@@ -264,8 +268,8 @@ function draw() {
 }
 
 function windowResized() {
-  width = windowWidth - rem * windowPadding * 2;
-  height = width / 2;
+  width = getDimensions().width;
+  height = getDimensions().height;
   resizeCanvas(width, height);
 
   for (let i = 0; i < snowflakes.length; i++) {
