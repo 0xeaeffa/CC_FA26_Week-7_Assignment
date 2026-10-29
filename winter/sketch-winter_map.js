@@ -275,7 +275,7 @@ function drawTerrain(g, w, h) {
     for (let j = 0; j < groundHeight.length; j++) {
       // let y = heightScale * groundHeight[j];
 
-      let y = terrains[i-1][j];
+      let y = terrains[i - 1][j];
       // console.log(`(${x}, ${y})`)
       g.vertex(x, y);
       x += 4;
@@ -320,7 +320,7 @@ function initWinter(g, w, h) {
     let angle = random(46, 58);
     let posX = random(width / 2, width);
     let pos = createVector(posX, -1 * (height / 8));
-    let scale = random(0.3, 0.9);
+    let scale = random(0.2, 0.6);
 
     let figPercent = random(0, 4);
     let figAmount = 6;
@@ -340,10 +340,11 @@ function initWinter(g, w, h) {
     let step = root / 2;
     let branchAmount = ceil(root / 4);
 
-    let rotateSpeed = scale * 2;
-    let flipSpeed = random(0.5, 1.5) * (scale * 2);
+    let rotateSpeed = scale * 8;
+    let flipSpeed = random(0.5, 1.5) * (scale * 0.1);
     let fallSpeed = random(0.8, 2) * (scale * 2);
-    let wave = random(1, 3);
+    // let wave = random(1, 3);
+    let wave = 0;
     let wind = random(0, -3);
 
     let cIndex = floor(random(0, 5));
@@ -379,7 +380,7 @@ function renderWinter(g, w, h) {
   drawBackground(g, colors.winterColor, w, h);
   drawGradient(g, colors.springColor, -w / 3, h * 0.75, w, w, h);
   drawGradient(g, colors.fallColor, w * 1.75, h * 0.25, w, w, h);
-  
+
   for (let i = 0; i < snowAmount; i++) {
     let s = snowflakes[i];
     s.update(g, frameCount);

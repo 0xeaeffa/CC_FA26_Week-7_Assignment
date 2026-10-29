@@ -58,30 +58,22 @@ function draw() {
   quadMap1.displayTexture(surface3);
   quadMap2.displayTexture(surface4);
 
-  renderWinter(winterBuf, 800, 400);
-  sfWinter1.image(winterBuf, 0, 0, 400, 400, 0, 0, 400, 400);
-  sfWinter2.image(winterBuf, 0, 0, 400, 400, 400, 0, 400, 400);
-  qmWinter1.displayTexture(sfWinter1);
-  qmWinter2.displayTexture(sfWinter2);
-
   renderFall(fallBuf);
 
   // top half of the fall buffer -> surface 7
-  surface7.image(
-    fallBuf,
-    0, 0, 400, 400,
-    0, 0, 400, 400
-  );
+  surface7.image(fallBuf, 0, 0, 400, 400, 0, 0, 400, 400);
 
   // bottom half of the fall buffer -> surface 8
-  surface8.image(
-    fallBuf,
-    0, 0, 400, 400,
-    0, 400, 400, 400
-  );
+  surface8.image(fallBuf, 0, 0, 400, 400, 0, 400, 400, 400);
 
   quadMapFall1.displayTexture(surface7);
   quadMapFall2.displayTexture(surface8);
+
+  renderWinter(winterBuf, 800, 400);
+  sfWinter1.image(winterBuf, 0, 0, 400, 400, 0, 0, 400, 400);
+  sfWinter2.image(winterBuf, 0, 0, 400, 400, 400, 0, 400, 400);
+  qmWinter2.displayTexture(sfWinter2);
+  qmWinter1.displayTexture(sfWinter1);
 }
 
 function keyPressed() {
